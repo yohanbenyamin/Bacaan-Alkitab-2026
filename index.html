@@ -1,0 +1,34 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Hagah 2026</title>
+<link rel="manifest" href="manifest.json">
+<style>
+body{background:#f05a28;color:white;font-family:Arial;text-align:center;padding:20px}
+button{padding:10px 20px;font-size:16px}
+</style>
+</head>
+<body>
+<h1>Hagah 2026</h1>
+<h3 id="text"></h3>
+<button onclick="openBible()">Baca Sekarang</button>
+
+<script>
+fetch('data.json').then(r=>r.json()).then(data=>{
+ let today = new Date().toISOString().split('T')[0];
+ let baca = data[today];
+ document.getElementById('text').innerText=
+ 'Pembacaan Alkitab Hari ini: '+baca;
+ window.ref=baca;
+})
+
+function openBible(){
+ let kitab=ref.split(" ")[0];
+ let pasal=ref.match(/\d+/)[0];
+ window.open("https://alkitab.mobi/tb/"+kitab+"/"+pasal);
+}
+</script>
+</body>
+</html>

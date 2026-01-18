@@ -1,0 +1,9 @@
+
+{
+ "name":"Hagah 2026",
+ "short_name":"Hagah2026",
+ "start_url":"index.html",
+ "display":"standalone",
+ "background_color":"#f05a28",
+ "theme_color":"#f05a28"
+}
