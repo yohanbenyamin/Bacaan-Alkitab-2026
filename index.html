@@ -2,35 +2,54 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
+
+<!-- PENTING UNTUK MOBILE -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
 <title>Hagah 2026</title>
 <link rel="manifest" href="manifest.json">
 
 <style>
+*{
+ box-sizing:border-box;
+}
+
 body{
  background:#f05a28;
  color:white;
  font-family:Arial, sans-serif;
  text-align:center;
+ margin:0;
+ padding:0;
+ height:100vh;
+ display:flex;
+ flex-direction:column;
+}
+
+/* CONTAINER */
+#app{
+ flex:1;
  display:flex;
  flex-direction:column;
  justify-content:center;
  align-items:center;
- min-height:100vh;
- margin:0;
- padding:15px;
+ padding:20px;
+ width:100%;
 }
 
+/* TITLE */
 #title{
- font-size:42px;
+ font-size:10vw; /* RESPONSIVE */
  font-weight:bold;
+ letter-spacing:2px;
  margin-bottom:10px;
- text-shadow:2px 2px 5px rgba(0,0,0,.4);
+ text-shadow:2px 2px 6px rgba(0,0,0,.5);
 }
 
 /* SCORE */
 #score{
- margin:10px 0;
- font-size:14px;
+ font-size:4vw;
+ margin-bottom:10px;
 }
 
 /* NAV */
@@ -38,67 +57,69 @@ body{
  display:flex;
  justify-content:space-between;
  width:100%;
- max-width:420px;
+ max-width:500px;
  margin:10px 0;
 }
 
 .navBtn{
+ width:48%;
  background:rgba(255,255,255,.25);
  border:none;
  color:white;
- padding:10px;
- border-radius:18px;
- font-size:13px;
- width:45%;
+ padding:14px;
+ border-radius:30px;
+ font-size:4vw;
 }
 
 /* TEXT */
 #today{
- font-size:18px;
+ font-size:5vw;
+ line-height:1.6;
  margin:15px 0;
- line-height:1.5;
 }
 
-/* BUTTON */
+/* MAIN BUTTON */
 #baca{
+ width:100%;
+ max-width:420px;
  background:#fff;
  color:#f05a28;
  border:none;
- padding:15px 35px;
- font-size:18px;
+ padding:18px;
+ font-size:5vw;
  font-weight:bold;
- border-radius:40px;
- cursor:pointer;
- box-shadow:0 5px 10px rgba(0,0,0,.4);
+ border-radius:50px;
+ box-shadow:0 6px 12px rgba(0,0,0,.4);
 }
 
 /* HISTORY */
 #history{
- margin-top:20px;
- font-size:13px;
- text-align:left;
  width:100%;
- max-width:420px;
+ max-width:500px;
  background:rgba(0,0,0,.15);
- padding:12px;
- border-radius:12px;
+ padding:15px;
+ border-radius:15px;
+ font-size:3.5vw;
+ text-align:left;
+ margin-top:15px;
 }
 
 /* WATERMARK */
 #watermark{
- position:fixed;
- bottom:8px;
- font-size:12px;
+ font-size:3vw;
  opacity:.8;
+ padding:10px 0;
 }
 </style>
 </head>
 
 <body>
 
+<div id="app">
+
 <div id="title">Hagah 2026</div>
 
-<div id="score">Score Bacaan: 0%</div>
+<div id="score">Score: 0%</div>
 
 <div id="nav">
  <button class="navBtn" onclick="changeDay(-1)">◀ Kemarin</button>
@@ -110,6 +131,8 @@ body{
 <button id="baca" onclick="openBible()">📖 BACA SEKARANG</button>
 
 <div id="history"></div>
+
+</div>
 
 <div id="watermark">
 GBI El Shadai - Pontianak
@@ -154,15 +177,15 @@ function openBible(){
  window.open("https://alkitab.mobi/tb/"+kitab+"/"+pasal);
 }
 
-/* HISTORY 7 HARI */
+/* HISTORY */
 function showHistory(){
- let html="<b>Riwayat 7 Hari Terakhir:</b><br>";
+ let html="<b>Riwayat 7 Hari Terakhir</b><br><br>";
  for(let i=1;i<=7;i++){
   let d=new Date(currentDate);
   d.setDate(d.getDate()-i);
   let k=formatDate(d);
   if(dataGlobal[k])
-   html+=formatHari(d)+" : "+dataGlobal[k]+"<br>";
+   html+=formatHari(d)+"<br>"+dataGlobal[k]+"<br><br>";
  }
  document.getElementById("history").innerHTML=html;
 }
@@ -175,7 +198,7 @@ function calcScore(){
  let done=Math.min(diff,365);
  let percent=Math.round((done/365)*100);
  document.getElementById("score").innerHTML=
- "Score Bacaan: <b>"+percent+"%</b>";
+ "Progress Bacaan: <b>"+percent+"%</b>";
 }
 
 /* UTIL */
@@ -203,8 +226,8 @@ document.addEventListener("touchend",e=>{
  if(!xStart)return;
  let xEnd=e.changedTouches[0].clientX;
  let diff=xStart-xEnd;
- if(diff>50) changeDay(1);     // swipe kiri
- if(diff<-50) changeDay(-1);  // swipe kanan
+ if(diff>50) changeDay(1);
+ if(diff<-50) changeDay(-1);
  xStart=null;
 });
 </script>
