@@ -150,18 +150,6 @@ body{
 <div style="width:100%;display:flex;justify-content:space-between;align-items:center;max-width:500px;">
  <div id="title">Hagah 2026</div>
 
- <button onclick="openHelp()"
- style="
- background:rgba(255,255,255,.3);
- border:none;
- color:white;
- width:40px;
- height:40px;
- border-radius:50%;
- font-size:20px;
- ">
- ?
- </button>
 </div>
 
 <div id="score">Progress: 0%</div>
@@ -177,6 +165,22 @@ body{
 
 <!-- SHARE -->
 <div id="shareBox">
+ <!-- HELP BUTTON -->
+<div style="margin-top:15px;text-align:center;">
+ <button onclick="openHelp()"
+ style="
+ background:rgba(255,255,255,.35);
+ border:none;
+ color:white;
+ width:50px;
+ height:50px;
+ border-radius:50%;
+ font-size:24px;
+ box-shadow:0 4px 8px rgba(0,0,0,.4);
+ ">
+ ?
+ </button>
+</div>
  <div id="shareTitle">Bagikan Renungan</div>
  <div class="shareGrid">
   <button class="shareBtn" onclick="shareWA()">WhatsApp</button>
