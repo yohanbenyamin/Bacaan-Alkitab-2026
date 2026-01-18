@@ -98,38 +98,18 @@ body{
  font-weight:bold;
  border-radius:50px;
  box-shadow:0 6px 12px rgba(0,0,0,.4);
- margin-bottom:15px;
 }
 
-/* SHARE */
-#shareBox{
+/* HISTORY */
+#history{
  width:100%;
  max-width:500px;
  background:rgba(0,0,0,.15);
  padding:15px;
- border-radius:18px;
- text-align:center;
-}
-
-#shareTitle{
- font-weight:bold;
- margin-bottom:10px;
- font-size:4vw;
-}
-
-.shareGrid{
- display:grid;
- grid-template-columns:repeat(3,1fr);
- gap:10px;
-}
-
-.shareBtn{
- background:rgba(255,255,255,.25);
- border:none;
- color:white;
- padding:12px 5px;
  border-radius:15px;
  font-size:3.5vw;
+ text-align:left;
+ margin-top:15px;
 }
 
 /* WATERMARK */
@@ -156,44 +136,16 @@ body{
  <button class="navBtn" onclick="changeDay(1)">Bacaan Besok ▶</button>
 </div>
 
+<!-- TODAY -->
 <div id="todayCard">Loading...</div>
 
 <button id="baca" onclick="openBible()">📖 BACA SEKARANG</button>
- <link rel="stylesheet" 
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-
-<!-- SHARE -->
-<div class="shareGrid">
-  <button class="shareBtn" onclick="shareWA()">
-    <i class="fab fa-whatsapp"></i>
-  </button>
-
-  <button class="shareBtn" onclick="shareX()">
-    <i class="fab fa-x-twitter"></i>
-  </button>
-
-  <button class="shareBtn" onclick="shareFB()">
-    <i class="fab fa-facebook-f"></i>
-  </button>
-
-  <button class="shareBtn" onclick="copyText()">
-    <i class="fas fa-copy"></i>
-  </button>
-
-  <button class="shareBtn" onclick="shareIG()">
-    <i class="fab fa-instagram"></i>
-  </button>
-
-  <button class="shareBtn" onclick="shareTT()">
-    <i class="fab fa-tiktok"></i>
-  </button>
-</div>
+<div id="history"></div>
 
 </div>
 
-</div>
-
+<!-- WATERMARK -->
 <div id="watermark">
 Created by: Yohan Benyamin B.<br>
 For: GBI El Shadai - Pontianak, 2026
@@ -202,7 +154,6 @@ For: GBI El Shadai - Pontianak, 2026
 <script>
 let currentDate=new Date();
 let dataGlobal;
-let shareText="";
 
 fetch('data.json')
 .then(r=>r.json())
@@ -215,18 +166,13 @@ function render(){
  let key=formatDate(currentDate);
  let bacaan=dataGlobal[key]||"Tidak ada data";
 
- let tampil=
- formatHari(currentDate)+"\n"+
- "Pembacaan Alkitab:\n"+bacaan+
- "\n\nBaca di: "+location.href+
- "\n\n#Hagah2026";
-
  document.getElementById("todayCard").innerHTML=
  "<b>"+formatHari(currentDate)+"</b><br><br>"+
  "Pembacaan Alkitab Hari ini:<br>"+
  "<b>"+bacaan+"</b>";
 
- shareText=tampil;
+ window.ref=bacaan;
+ showHistory();
  calcScore();
 }
 
@@ -236,45 +182,22 @@ function changeDay(step){
 }
 
 function openBible(){
- let kitab=shareText.split("\n")[2].split(" ")[0];
- let pasal=shareText.match(/\d+/)[0];
+ let kitab=ref.split(" ")[0];
+ let pasal=ref.match(/\d+/)[0];
  window.open("https://alkitab.mobi/tb/"+kitab+"/"+pasal);
 }
 
-/* SHARE FUNCTIONS */
-function shareWA(){
- window.open(
- "https://wa.me/?text="+encodeURIComponent(shareText)
- );
-}
-
-function shareX(){
- window.open(
- "https://twitter.com/intent/tweet?text="+
- encodeURIComponent(shareText)
- );
-}
-
-function shareFB(){
- window.open(
- "https://www.facebook.com/sharer/sharer.php?u="+
- encodeURIComponent(location.href)
- );
-}
-
-function copyText(){
- navigator.clipboard.writeText(shareText);
- alert("Teks berhasil disalin!");
-}
-
-function shareIG(){
- copyText();
- alert("Teks disalin.\nTempel di Instagram Story / Caption.");
-}
-
-function shareTT(){
- copyText();
- alert("Teks disalin.\nTempel di TikTok Caption.");
+/* HISTORY */
+function showHistory(){
+ let html="<b>Riwayat 7 Hari Terakhir</b><br><br>";
+ for(let i=1;i<=7;i++){
+  let d=new Date(currentDate);
+  d.setDate(d.getDate()-i);
+  let k=formatDate(d);
+  if(dataGlobal[k])
+   html+=formatHari(d)+"<br>"+dataGlobal[k]+"<br><br>";
+ }
+ document.getElementById("history").innerHTML=html;
 }
 
 /* SCORE */
