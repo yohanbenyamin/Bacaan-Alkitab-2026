@@ -1,34 +1,109 @@
-
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
 <meta charset="UTF-8">
 <title>Hagah 2026</title>
 <link rel="manifest" href="manifest.json">
+
 <style>
-body{background:#f05a28;color:white;font-family:Arial;text-align:center;padding:20px}
-button{padding:10px 20px;font-size:16px}
+body{
+  background:#f05a28;
+  color:white;
+  font-family:Arial, sans-serif;
+  text-align:center;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  margin:0;
+  padding:20px;
+}
+
+#title{
+  font-size:48px;
+  font-weight:bold;
+  letter-spacing:2px;
+  margin-bottom:20px;
+  text-shadow:2px 2px 5px rgba(0,0,0,0.4);
+}
+
+#today{
+  font-size:20px;
+  margin-bottom:30px;
+  line-height:1.6;
+}
+
+#baca{
+  background:#fff;
+  color:#f05a28;
+  border:none;
+  padding:18px 40px;
+  font-size:22px;
+  font-weight:bold;
+  border-radius:40px;
+  cursor:pointer;
+  box-shadow:0 5px 10px rgba(0,0,0,0.4);
+  transition:0.3s;
+}
+
+#baca:hover{
+  transform:scale(1.05);
+}
+
+#watermark{
+  position:fixed;
+  bottom:10px;
+  font-size:14px;
+  opacity:0.8;
+}
 </style>
 </head>
+
 <body>
-<h1>Hagah 2026</h1>
-<h3 id="text"></h3>
-<button onclick="openBible()">Baca Sekarang</button>
+
+<div id="title">Hagah 2026</div>
+
+<div id="today">Loading...</div>
+
+<button id="baca" onclick="openBible()">📖 BACA SEKARANG</button>
+
+<div id="watermark">
+GBI El Shadai - Pontianak
+</div>
 
 <script>
-fetch('data.json').then(r=>r.json()).then(data=>{
- let today = new Date().toISOString().split('T')[0];
- let baca = data[today];
- document.getElementById('text').innerText=
- 'Pembacaan Alkitab Hari ini: '+baca;
- window.ref=baca;
-})
+fetch('data.json')
+.then(r=>r.json())
+.then(data=>{
+
+ let now = new Date();
+ let yyyy = now.getFullYear();
+ let mm = String(now.getMonth()+1).padStart(2,'0');
+ let dd = String(now.getDate()).padStart(2,'0');
+
+ let hari = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
+ let namaHari = hari[now.getDay()];
+
+ let tanggal = dd+"-"+mm+"-"+yyyy;
+ let key = yyyy+"-"+mm+"-"+dd;
+
+ let bacaan = data[key];
+
+ document.getElementById("today").innerHTML =
+ "<b>"+namaHari+", "+tanggal+"</b><br><br>" +
+ "Pembacaan Alkitab Hari ini:<br>" +
+ "<b>"+bacaan+"</b>";
+
+ window.ref = bacaan;
+});
 
 function openBible(){
- let kitab=ref.split(" ")[0];
- let pasal=ref.match(/\d+/)[0];
+ let kitab = ref.split(" ")[0];
+ let pasal = ref.match(/\d+/)[0];
  window.open("https://alkitab.mobi/tb/"+kitab+"/"+pasal);
 }
 </script>
+
 </body>
 </html>
