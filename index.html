@@ -147,180 +147,63 @@ body{
 
 <div id="app">
 
-<div style="width:100%;max-width:500px;text-align:center;">
- <div id="title">Hagah 2026</div>
-</div>
-
-</div>
-
-<div id="score">Progress: 0%</div>
-
-<div id="nav">
- <button class="navBtn" onclick="changeDay(-1)">◀ Bacaan Kemarin</button>
- <button class="navBtn" onclick="changeDay(1)">Bacaan Besok ▶</button>
-</div>
-
-<div id="todayCard">Loading...</div>
-
-<button id="baca" onclick="openBible()">📖 BACA SEKARANG</button>
-
-<!-- SHARE -->
-<div id="shareBox">
- <div id="shareTitle">Bagikan Renungan</div>
- <div class="shareGrid">
-  <button class="shareBtn" onclick="shareWA()">WhatsApp</button>
-  <button class="shareBtn" onclick="shareX()">X</button>
-  <button class="shareBtn" onclick="shareFB()">Facebook</button>
-  <button class="shareBtn" onclick="copyText()">Copy Text</button>
-  <button class="shareBtn" onclick="shareIG()">Instagram</button>
-  <button class="shareBtn" onclick="shareTT()">TikTok</button>
+ <!-- TITLE -->
+ <div style="width:100%;max-width:500px;text-align:center;">
+  <div id="title">Hagah 2026</div>
  </div>
-</div>
 
-</div>
-<!-- HELP BUTTON -->
-<div style="margin-top:15px;text-align:center;">
- <button onclick="openHelp()"
- style="
- background:rgba(255,255,255,.35);
- border:none;
- color:white;
- width:50px;
- height:50px;
- border-radius:50%;
- font-size:24px;
- box-shadow:0 4px 8px rgba(0,0,0,.4);
- ">
- ?
- </button>
-</div>
+ <!-- SCORE -->
+ <div id="score">Progress: 0%</div>
+
+ <!-- NAV -->
+ <div id="nav">
+  <button class="navBtn" onclick="changeDay(-1)">◀ Bacaan Kemarin</button>
+  <button class="navBtn" onclick="changeDay(1)">Bacaan Besok ▶</button>
+ </div>
+
+ <!-- TODAY -->
+ <div id="todayCard">Loading...</div>
+
+ <!-- MAIN BUTTON -->
+ <button id="baca" onclick="openBible()">📖 BACA SEKARANG</button>
+
+ <!-- SHARE -->
+ <div id="shareBox">
+  <div id="shareTitle">Bagikan Renungan</div>
+  <div class="shareGrid">
+   <button class="shareBtn" onclick="shareWA()">WhatsApp</button>
+   <button class="shareBtn" onclick="shareX()">X</button>
+   <button class="shareBtn" onclick="shareFB()">Facebook</button>
+   <button class="shareBtn" onclick="copyText()">Copy Text</button>
+   <button class="shareBtn" onclick="shareIG()">Instagram</button>
+   <button class="shareBtn" onclick="shareTT()">TikTok</button>
+  </div>
+ </div>
+
+ <!-- HELP -->
+ <div style="margin-top:15px;text-align:center;">
+  <button onclick="openHelp()"
+  style="
+  background:rgba(255,255,255,.35);
+  border:none;
+  color:white;
+  width:50px;
+  height:50px;
+  border-radius:50%;
+  font-size:24px;
+  box-shadow:0 4px 8px rgba(0,0,0,.4);
+  ">
+  ?
+  </button>
+ </div>
+
+</div> <!-- END #app -->
+
+<!-- WATERMARK -->
 <div id="watermark">
 Created by: Yohan Benyamin B.<br>
 For: GBI El Shadai - Pontianak, 2026
 </div>
-
-<script>
-let currentDate=new Date();
-let dataGlobal;
-let shareText="";
-
-fetch('data.json')
-.then(r=>r.json())
-.then(data=>{
- dataGlobal=data;
- render();
-});
-
-function render(){
- let key=formatDate(currentDate);
- let bacaan=dataGlobal[key]||"Tidak ada data";
-
- let tampil=
- formatHari(currentDate)+"\n"+
- "Pembacaan Alkitab:\n"+bacaan+
- "\n\nBaca di: "+location.href+
- "\n\n#Hagah2026";
-
- document.getElementById("todayCard").innerHTML=
- "<b>"+formatHari(currentDate)+"</b><br><br>"+
- "Pembacaan Alkitab Hari ini:<br>"+
- "<b>"+bacaan+"</b>";
-
- shareText=tampil;
- calcScore();
-}
-
-function changeDay(step){
- currentDate.setDate(currentDate.getDate()+step);
- render();
-}
-
-function openBible(){
- let kitab=shareText.split("\n")[2].split(" ")[0];
- let pasal=shareText.match(/\d+/)[0];
- window.open("https://alkitab.mobi/tb/"+kitab+"/"+pasal);
-}
-
-/* SHARE FUNCTIONS */
-function shareWA(){
- window.open(
- "https://wa.me/?text="+encodeURIComponent(shareText)
- );
-}
-
-function shareX(){
- window.open(
- "https://twitter.com/intent/tweet?text="+
- encodeURIComponent(shareText)
- );
-}
-
-function shareFB(){
- window.open(
- "https://www.facebook.com/sharer/sharer.php?u="+
- encodeURIComponent(location.href)
- );
-}
-
-function copyText(){
- navigator.clipboard.writeText(shareText);
- alert("Teks berhasil disalin!");
-}
-
-function shareIG(){
- copyText();
- alert("Teks disalin.\nTempel di Instagram Story / Caption.");
-}
-
-function shareTT(){
- copyText();
- alert("Teks disalin.\nTempel di TikTok Caption.");
-}
-
-/* SCORE */
-function calcScore(){
- let start=new Date("2026-01-01");
- let today=new Date();
- let diff=Math.floor((today-start)/86400000)+1;
- let done=Math.min(diff,365);
- let percent=Math.round((done/365)*100);
- document.getElementById("score").innerHTML=
- "Progress Bacaan: <b>"+percent+"%</b>";
-}
-
-/* UTIL */
-function formatDate(d){
- let y=d.getFullYear();
- let m=String(d.getMonth()+1).padStart(2,'0');
- let da=String(d.getDate()).padStart(2,'0');
- return y+"-"+m+"-"+da;
-}
-
-function formatHari(d){
- let h=["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
- return h[d.getDay()]+", "+
- String(d.getDate()).padStart(2,'0')+"-"+
- String(d.getMonth()+1).padStart(2,'0')+"-"+d.getFullYear();
-}
-
-/* SWIPE */
-let xStart=null;
-document.addEventListener("touchstart",e=>{
- xStart=e.touches[0].clientX;
-});
-
-document.addEventListener("touchend",e=>{
- if(!xStart)return;
- let xEnd=e.changedTouches[0].clientX;
- let diff=xStart-xEnd;
- if(diff>50) changeDay(1);
- if(diff<-50) changeDay(-1);
- xStart=null;
-});
- function openHelp(){
- window.location.href="readme.html";
-}
-</script>
 
 </body>
 </html>
