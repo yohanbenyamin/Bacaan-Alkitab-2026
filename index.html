@@ -3,30 +3,26 @@
 <head>
 <meta charset="UTF-8">
 
-<!-- PENTING UNTUK MOBILE -->
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 <title>Hagah 2026</title>
 <link rel="manifest" href="manifest.json">
 
 <style>
-*{
- box-sizing:border-box;
-}
+*{box-sizing:border-box;}
 
 body{
  background:#f05a28;
  color:white;
  font-family:Arial, sans-serif;
- text-align:center;
  margin:0;
- padding:0;
  height:100vh;
  display:flex;
  flex-direction:column;
 }
 
-/* CONTAINER */
+/* APP */
 #app{
  flex:1;
  display:flex;
@@ -34,16 +30,14 @@ body{
  justify-content:center;
  align-items:center;
  padding:20px;
- width:100%;
 }
 
 /* TITLE */
 #title{
- font-size:10vw; /* RESPONSIVE */
+ font-size:10vw;
  font-weight:bold;
- letter-spacing:2px;
- margin-bottom:10px;
  text-shadow:2px 2px 6px rgba(0,0,0,.5);
+ margin-bottom:10px;
 }
 
 /* SCORE */
@@ -71,11 +65,25 @@ body{
  font-size:4vw;
 }
 
-/* TEXT */
-#today{
+/* TODAY CARD */
+#todayCard{
+ width:100%;
+ max-width:500px;
+ background:rgba(255,255,255,.18);
+ padding:18px;
+ border-radius:25px;
+ margin:15px 0;
  font-size:5vw;
  line-height:1.6;
- margin:15px 0;
+ animation:pulse 2.5s infinite;
+ box-shadow:0 4px 10px rgba(0,0,0,.4);
+}
+
+/* ANIMATION */
+@keyframes pulse{
+ 0%{transform:scale(1);}
+ 50%{transform:scale(1.03);}
+ 100%{transform:scale(1);}
 }
 
 /* MAIN BUTTON */
@@ -106,9 +114,11 @@ body{
 
 /* WATERMARK */
 #watermark{
+ text-align:center;
  font-size:3vw;
- opacity:.8;
- padding:10px 0;
+ opacity:.85;
+ padding:12px 5px;
+ line-height:1.5;
 }
 </style>
 </head>
@@ -119,14 +129,15 @@ body{
 
 <div id="title">Hagah 2026</div>
 
-<div id="score">Score: 0%</div>
+<div id="score">Progress: 0%</div>
 
 <div id="nav">
- <button class="navBtn" onclick="changeDay(-1)">◀ Kemarin</button>
- <button class="navBtn" onclick="changeDay(1)">Besok ▶</button>
+ <button class="navBtn" onclick="changeDay(-1)">◀ Bacaan Kemarin</button>
+ <button class="navBtn" onclick="changeDay(1)">Bacaan Besok ▶</button>
 </div>
 
-<div id="today">Loading...</div>
+<!-- TODAY -->
+<div id="todayCard">Loading...</div>
 
 <button id="baca" onclick="openBible()">📖 BACA SEKARANG</button>
 
@@ -134,8 +145,10 @@ body{
 
 </div>
 
+<!-- WATERMARK -->
 <div id="watermark">
-GBI El Shadai - Pontianak
+Created by: Yohan Benyamin B.<br>
+For: GBI El Shadai - Pontianak, 2026
 </div>
 
 <script>
@@ -149,12 +162,11 @@ fetch('data.json')
  render();
 });
 
-/* RENDER */
 function render(){
  let key=formatDate(currentDate);
  let bacaan=dataGlobal[key]||"Tidak ada data";
 
- document.getElementById("today").innerHTML=
+ document.getElementById("todayCard").innerHTML=
  "<b>"+formatHari(currentDate)+"</b><br><br>"+
  "Pembacaan Alkitab Hari ini:<br>"+
  "<b>"+bacaan+"</b>";
@@ -164,13 +176,11 @@ function render(){
  calcScore();
 }
 
-/* CHANGE DAY */
 function changeDay(step){
  currentDate.setDate(currentDate.getDate()+step);
  render();
 }
 
-/* OPEN */
 function openBible(){
  let kitab=ref.split(" ")[0];
  let pasal=ref.match(/\d+/)[0];
