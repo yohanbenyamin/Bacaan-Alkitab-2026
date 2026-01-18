@@ -7,55 +7,89 @@
 
 <style>
 body{
-  background:#f05a28;
-  color:white;
-  font-family:Arial, sans-serif;
-  text-align:center;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  height:100vh;
-  margin:0;
-  padding:20px;
+ background:#f05a28;
+ color:white;
+ font-family:Arial, sans-serif;
+ text-align:center;
+ display:flex;
+ flex-direction:column;
+ justify-content:center;
+ align-items:center;
+ min-height:100vh;
+ margin:0;
+ padding:15px;
 }
 
 #title{
-  font-size:48px;
-  font-weight:bold;
-  letter-spacing:2px;
-  margin-bottom:20px;
-  text-shadow:2px 2px 5px rgba(0,0,0,0.4);
+ font-size:42px;
+ font-weight:bold;
+ margin-bottom:10px;
+ text-shadow:2px 2px 5px rgba(0,0,0,.4);
 }
 
+/* SCORE */
+#score{
+ margin:10px 0;
+ font-size:14px;
+}
+
+/* NAV */
+#nav{
+ display:flex;
+ justify-content:space-between;
+ width:100%;
+ max-width:420px;
+ margin:10px 0;
+}
+
+.navBtn{
+ background:rgba(255,255,255,.25);
+ border:none;
+ color:white;
+ padding:10px;
+ border-radius:18px;
+ font-size:13px;
+ width:45%;
+}
+
+/* TEXT */
 #today{
-  font-size:20px;
-  margin-bottom:30px;
-  line-height:1.6;
+ font-size:18px;
+ margin:15px 0;
+ line-height:1.5;
 }
 
+/* BUTTON */
 #baca{
-  background:#fff;
-  color:#f05a28;
-  border:none;
-  padding:18px 40px;
-  font-size:22px;
-  font-weight:bold;
-  border-radius:40px;
-  cursor:pointer;
-  box-shadow:0 5px 10px rgba(0,0,0,0.4);
-  transition:0.3s;
+ background:#fff;
+ color:#f05a28;
+ border:none;
+ padding:15px 35px;
+ font-size:18px;
+ font-weight:bold;
+ border-radius:40px;
+ cursor:pointer;
+ box-shadow:0 5px 10px rgba(0,0,0,.4);
 }
 
-#baca:hover{
-  transform:scale(1.05);
+/* HISTORY */
+#history{
+ margin-top:20px;
+ font-size:13px;
+ text-align:left;
+ width:100%;
+ max-width:420px;
+ background:rgba(0,0,0,.15);
+ padding:12px;
+ border-radius:12px;
 }
 
+/* WATERMARK */
 #watermark{
-  position:fixed;
-  bottom:10px;
-  font-size:14px;
-  opacity:0.8;
+ position:fixed;
+ bottom:8px;
+ font-size:12px;
+ opacity:.8;
 }
 </style>
 </head>
@@ -64,45 +98,115 @@ body{
 
 <div id="title">Hagah 2026</div>
 
+<div id="score">Score Bacaan: 0%</div>
+
+<div id="nav">
+ <button class="navBtn" onclick="changeDay(-1)">◀ Kemarin</button>
+ <button class="navBtn" onclick="changeDay(1)">Besok ▶</button>
+</div>
+
 <div id="today">Loading...</div>
 
 <button id="baca" onclick="openBible()">📖 BACA SEKARANG</button>
+
+<div id="history"></div>
 
 <div id="watermark">
 GBI El Shadai - Pontianak
 </div>
 
 <script>
+let currentDate=new Date();
+let dataGlobal;
+
 fetch('data.json')
 .then(r=>r.json())
 .then(data=>{
-
- let now = new Date();
- let yyyy = now.getFullYear();
- let mm = String(now.getMonth()+1).padStart(2,'0');
- let dd = String(now.getDate()).padStart(2,'0');
-
- let hari = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
- let namaHari = hari[now.getDay()];
-
- let tanggal = dd+"-"+mm+"-"+yyyy;
- let key = yyyy+"-"+mm+"-"+dd;
-
- let bacaan = data[key];
-
- document.getElementById("today").innerHTML =
- "<b>"+namaHari+", "+tanggal+"</b><br><br>" +
- "Pembacaan Alkitab Hari ini:<br>" +
- "<b>"+bacaan+"</b>";
-
- window.ref = bacaan;
+ dataGlobal=data;
+ render();
 });
 
+/* RENDER */
+function render(){
+ let key=formatDate(currentDate);
+ let bacaan=dataGlobal[key]||"Tidak ada data";
+
+ document.getElementById("today").innerHTML=
+ "<b>"+formatHari(currentDate)+"</b><br><br>"+
+ "Pembacaan Alkitab Hari ini:<br>"+
+ "<b>"+bacaan+"</b>";
+
+ window.ref=bacaan;
+ showHistory();
+ calcScore();
+}
+
+/* CHANGE DAY */
+function changeDay(step){
+ currentDate.setDate(currentDate.getDate()+step);
+ render();
+}
+
+/* OPEN */
 function openBible(){
- let kitab = ref.split(" ")[0];
- let pasal = ref.match(/\d+/)[0];
+ let kitab=ref.split(" ")[0];
+ let pasal=ref.match(/\d+/)[0];
  window.open("https://alkitab.mobi/tb/"+kitab+"/"+pasal);
 }
+
+/* HISTORY 7 HARI */
+function showHistory(){
+ let html="<b>Riwayat 7 Hari Terakhir:</b><br>";
+ for(let i=1;i<=7;i++){
+  let d=new Date(currentDate);
+  d.setDate(d.getDate()-i);
+  let k=formatDate(d);
+  if(dataGlobal[k])
+   html+=formatHari(d)+" : "+dataGlobal[k]+"<br>";
+ }
+ document.getElementById("history").innerHTML=html;
+}
+
+/* SCORE */
+function calcScore(){
+ let start=new Date("2026-01-01");
+ let today=new Date();
+ let diff=Math.floor((today-start)/86400000)+1;
+ let done=Math.min(diff,365);
+ let percent=Math.round((done/365)*100);
+ document.getElementById("score").innerHTML=
+ "Score Bacaan: <b>"+percent+"%</b>";
+}
+
+/* UTIL */
+function formatDate(d){
+ let y=d.getFullYear();
+ let m=String(d.getMonth()+1).padStart(2,'0');
+ let da=String(d.getDate()).padStart(2,'0');
+ return y+"-"+m+"-"+da;
+}
+
+function formatHari(d){
+ let h=["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
+ return h[d.getDay()]+", "+
+ String(d.getDate()).padStart(2,'0')+"-"+
+ String(d.getMonth()+1).padStart(2,'0')+"-"+d.getFullYear();
+}
+
+/* SWIPE */
+let xStart=null;
+document.addEventListener("touchstart",e=>{
+ xStart=e.touches[0].clientX;
+});
+
+document.addEventListener("touchend",e=>{
+ if(!xStart)return;
+ let xEnd=e.changedTouches[0].clientX;
+ let diff=xStart-xEnd;
+ if(diff>50) changeDay(1);     // swipe kiri
+ if(diff<-50) changeDay(-1);  // swipe kanan
+ xStart=null;
+});
 </script>
 
 </body>
