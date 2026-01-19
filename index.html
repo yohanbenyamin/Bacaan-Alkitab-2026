@@ -1,243 +1,4 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
- <!-- Google Analytics GA4 -->
-<script async
- src="https://www.googletagmanager.com/gtag/js?id=G-VQQ0H44YW4"></script>
-
 <script>
-window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-
-gtag('config', 'G-VQQ0H44YW4', {
- anonymize_ip:true
-});
-</script>
-
-<meta charset="UTF-8">
-
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
-<title>Hagah 2026</title>
-<link rel="manifest" href="manifest.json">
-
-<style>
-*{box-sizing:border-box;}
-
-body{
- background:#f05a28;
- color:white;
- font-family:Arial, sans-serif;
- margin:0;
- height:100vh;
- display:flex;
- flex-direction:column;
-}
-
-/* APP */
-#app{
- flex:1;
- display:flex;
- flex-direction:column;
- justify-content:center;
- align-items:center;
- padding:20px;
-}
-
-/* TITLE */
-#title{
- font-size:10vw;
- font-weight:bold;
- text-shadow:2px 2px 6px rgba(0,0,0,.5);
- margin-bottom:10px;
-}
-
-/* SCORE */
-#score{
- font-size:4vw;
- margin-bottom:10px;
-}
-
-/* NAV */
-#nav{
- display:flex;
- justify-content:space-between;
- width:100%;
- max-width:500px;
- margin:10px 0;
-}
-
-.navBtn{
- width:48%;
- background:rgba(255,255,255,.25);
- border:none;
- color:white;
- padding:14px;
- border-radius:30px;
- font-size:4vw;
-}
-
-/* TODAY CARD */
-#todayCard{
- width:100%;
- max-width:500px;
- background:rgba(255,255,255,.18);
- padding:18px;
- border-radius:25px;
- margin:15px 0;
- font-size:5vw;
- line-height:1.6;
- animation:pulse 2.5s infinite;
- box-shadow:0 4px 10px rgba(0,0,0,.4);
-}
-
-/* ANIMATION */
-@keyframes pulse{
- 0%{transform:scale(1);}
- 50%{transform:scale(1.03);}
- 100%{transform:scale(1);}
-}
-
-/* MAIN BUTTON */
-#baca{
- width:100%;
- max-width:420px;
- background:#fff;
- color:#f05a28;
- border:none;
- padding:18px;
- font-size:5vw;
- font-weight:bold;
- border-radius:50px;
- box-shadow:0 6px 12px rgba(0,0,0,.4);
- margin-bottom:15px;
-}
-
-/* SHARE */
-#shareBox{
- width:100%;
- max-width:500px;
- background:rgba(0,0,0,.15);
- padding:15px;
- border-radius:18px;
- text-align:center;
-}
-
-#shareTitle{
- font-weight:bold;
- margin-bottom:10px;
- font-size:4vw;
-}
-
-.shareGrid{
- display:grid;
- grid-template-columns:repeat(3,1fr);
- gap:10px;
-}
-
-.shareBtn{
- background:rgba(255,255,255,.25);
- border:none;
- color:white;
- padding:12px 5px;
- border-radius:15px;
- font-size:3.5vw;
-}
-
-/* WATERMARK */
-#watermark{
- text-align:center;
- font-size:3vw;
- opacity:.85;
- padding:12px 5px;
- line-height:1.5;
-}
-</style>
-</head>
-
-<body>
-
-<div id="app">
-
- <!-- TITLE -->
- <div style="width:100%;max-width:500px;text-align:center;">
-  <div id="title">Hagah 2026</div>
- </div>
-
- <!-- SCORE -->
- <div id="score">Progress: 0%</div>
-
- <!-- NAV -->
- <div id="nav">
-  <button class="navBtn" onclick="changeDay(-1)">◀ Bacaan Kemarin</button>
-  <button class="navBtn" onclick="changeDay(1)">Bacaan Besok ▶</button>
- </div>
-
- <!-- TODAY -->
- <div id="todayCard">Loading...</div>
-
- <!-- MAIN BUTTON -->
- <button id="baca" onclick="openBible()">📖 BACA SEKARANG</button>
-
- <!-- SHARE -->
- <div id="shareBox">
-  <div id="shareTitle">Bagikan Renungan</div>
-  <div class="shareGrid">
-   <button class="shareBtn" onclick="shareWA()">WhatsApp</button>
-   <button class="shareBtn" onclick="shareX()">X</button>
-   <button class="shareBtn" onclick="shareFB()">Facebook</button>
-   <button class="shareBtn" onclick="copyText()">Copy Text</button>
-   <button class="shareBtn" onclick="shareIG()">Instagram</button>
-   <button class="shareBtn" onclick="shareTT()">TikTok</button>
-  </div>
- </div>
-<!-- STATISTIK -->
-<div id="statsBox"
-style="
-width:100%;
-max-width:500px;
-margin-top:12px;
-background:rgba(0,0,0,.18);
-padding:12px;
-border-radius:15px;
-font-size:3.5vw;
-text-align:left;
-">
-
- <div>📊 Hari ini: <b id="statDay">0</b></div>
- <div>📅 Mingguan: <b id="statWeek">0</b></div>
- <div>🗓 Bulanan: <b id="statMonth">0</b></div>
- <div>🔥 Total: <b id="statTotal">0</b></div>
-
-</div>
-
- <!-- HELP -->
- <div style="margin-top:15px;text-align:center;">
-  <button onclick="openHelp()"
-  style="
-  background:rgba(255,255,255,.35);
-  border:none;
-  color:white;
-  width:50px;
-  height:50px;
-  border-radius:50%;
-  font-size:24px;
-  box-shadow:0 4px 8px rgba(0,0,0,.4);
-  ">
-  ?
-  </button>
- </div>
-
-</div> <!-- END #app -->
-
-<!-- WATERMARK -->
-<div id="watermark">
-Created by: Yohan Benyamin B.<br>
-For: GBI El Shadai - Pontianak, 2026
-</div>
- <script>
 let currentDate=new Date();
 let dataGlobal;
 let shareText="";
@@ -251,6 +12,7 @@ fetch('data.json')
 .then(data=>{
  dataGlobal=data;
  render();
+ initAnalytics();
 })
 .catch(err=>{
  document.getElementById("todayCard").innerHTML =
@@ -284,6 +46,7 @@ function changeDay(step){
  render();
 }
 
+/* === OPEN BIBLE (1 PASAL SAJA) === */
 function openBible(){
 
  let key=formatDate(currentDate);
@@ -294,28 +57,12 @@ function openBible(){
  let kitab=parts[0];
  let range=parts[1];
 
- // kalau tidak pakai range
- if(!range.includes("-")){
-  window.open(
-   "https://alkitab.mobi/tb/"+kitab+"/"+range
-  );
-  return;
- }
+ let pasal=range.split("-")[0]; // ambil pasal pertama saja
 
- // kalau pakai range (11-13)
- let start=parseInt(range.split("-")[0]);
- let end=parseInt(range.split("-")[1]);
-
- for(let i=start;i<=end;i++){
-  window.open(
-   "https://alkitab.mobi/tb/"+kitab+"/"+i,
-   "_blank"
-  );
- }
-}
-
-function bacaanNama(){
- return shareText.split("\n")[2].split(" ")[0];
+ window.open(
+ "https://alkitab.mobi/tb/"+kitab+"/"+pasal,
+ "_blank"
+ );
 }
 
 /* SHARE */
@@ -393,9 +140,14 @@ document.addEventListener("touchend",e=>{
 /* HELP */
 function openHelp(){
  window.location.href="readme.html";
- /* ===== GLOBAL ANALYTICS EVENT ===== */
-trackGA();
-updateCounter();
+}
+
+/* ================= ANALYTICS + COUNTER ================= */
+
+function initAnalytics(){
+ trackGA();
+ updateCounter();
+}
 
 function trackGA(){
  let now=new Date();
@@ -408,8 +160,7 @@ function trackGA(){
  });
 }
 
-/* ===== LIVE COUNTER UI ===== */
-
+/* LIVE COUNTER */
 function updateCounter(){
 
  let now=new Date();
@@ -450,7 +201,4 @@ function getWeekKey(date){
  let w=Math.ceil((((d-y)/86400000)+1)/7);
  return d.getFullYear()+"-W"+String(w).padStart(2,'0');
 }
-}
 </script>
-</body>
-</html>
