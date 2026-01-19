@@ -1,6 +1,8 @@
 <script>
+document.addEventListener("DOMContentLoaded",()=>{
+
 let currentDate=new Date();
-let dataGlobal;
+let dataGlobal={};
 let shareText="";
 
 /* LOAD DATA */
@@ -41,23 +43,20 @@ function render(){
 }
 
 /* NAV */
-function changeDay(step){
+window.changeDay=function(step){
  currentDate.setDate(currentDate.getDate()+step);
  render();
 }
 
-/* === OPEN BIBLE (1 PASAL SAJA) === */
-function openBible(){
+/* OPEN BIBLE */
+window.openBible=function(){
 
  let key=formatDate(currentDate);
  let bacaan=dataGlobal[key]||"";
 
- // contoh: "Keluaran 11-13"
  let parts=bacaan.split(" ");
  let kitab=parts[0];
- let range=parts[1];
-
- let pasal=range.split("-")[0]; // ambil pasal pertama saja
+ let pasal=parts[1].split("-")[0];
 
  window.open(
  "https://alkitab.mobi/tb/"+kitab+"/"+pasal,
@@ -66,34 +65,24 @@ function openBible(){
 }
 
 /* SHARE */
-function shareWA(){
+window.shareWA=function(){
  window.open("https://wa.me/?text="+encodeURIComponent(shareText));
 }
-
-function shareX(){
- window.open("https://twitter.com/intent/tweet?text="+
- encodeURIComponent(shareText));
+window.shareX=function(){
+ window.open("https://twitter.com/intent/tweet?text="+encodeURIComponent(shareText));
 }
-
-function shareFB(){
- window.open(
- "https://www.facebook.com/sharer/sharer.php?u="+
- encodeURIComponent(location.href));
+window.shareFB=function(){
+ window.open("https://www.facebook.com/sharer/sharer.php?u="+encodeURIComponent(location.href));
 }
-
-function copyText(){
+window.copyText=function(){
  navigator.clipboard.writeText(shareText);
  alert("Teks berhasil disalin!");
 }
-
-function shareIG(){
- copyText();
- alert("Tempel di Instagram");
+window.shareIG=function(){
+ copyText(); alert("Tempel di Instagram");
 }
-
-function shareTT(){
- copyText();
- alert("Tempel di TikTok");
+window.shareTT=function(){
+ copyText(); alert("Tempel di TikTok");
 }
 
 /* SCORE */
@@ -127,7 +116,6 @@ let xStart=null;
 document.addEventListener("touchstart",e=>{
  xStart=e.touches[0].clientX;
 });
-
 document.addEventListener("touchend",e=>{
  if(!xStart)return;
  let xEnd=e.changedTouches[0].clientX;
@@ -138,12 +126,11 @@ document.addEventListener("touchend",e=>{
 });
 
 /* HELP */
-function openHelp(){
+window.openHelp=function(){
  window.location.href="readme.html";
 }
 
-/* ================= ANALYTICS + COUNTER ================= */
-
+/* ANALYTICS + COUNTER */
 function initAnalytics(){
  trackGA();
  updateCounter();
@@ -151,7 +138,6 @@ function initAnalytics(){
 
 function trackGA(){
  let now=new Date();
-
  gtag('event','baca_app',{
   app:'Hagah2026',
   date:formatDate(now),
@@ -160,7 +146,6 @@ function trackGA(){
  });
 }
 
-/* LIVE COUNTER */
 function updateCounter(){
 
  let now=new Date();
@@ -175,24 +160,20 @@ function updateCounter(){
 
  document.getElementById("statDay").innerHTML=
  localStorage.getItem(dKey)||0;
-
  document.getElementById("statWeek").innerHTML=
  localStorage.getItem(wKey)||0;
-
  document.getElementById("statMonth").innerHTML=
  localStorage.getItem(mKey)||0;
-
  document.getElementById("statTotal").innerHTML=
  localStorage.getItem("total_all")||0;
 }
 
 function increment(key){
- let val=parseInt(localStorage.getItem(key)||0);
- val++;
- localStorage.setItem(key,val);
+ let v=parseInt(localStorage.getItem(key)||0);
+ v++; localStorage.setItem(key,v);
 }
 
-/* WEEK FORMAT */
+/* WEEK */
 function getWeekKey(date){
  let d=new Date(date);
  d.setHours(0,0,0);
@@ -201,4 +182,6 @@ function getWeekKey(date){
  let w=Math.ceil((((d-y)/86400000)+1)/7);
  return d.getFullYear()+"-W"+String(w).padStart(2,'0');
 }
+
+});
 </script>
