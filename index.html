@@ -1,6 +1,20 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
+ <!-- Google Analytics GA4 -->
+<script async
+ src="https://www.googletagmanager.com/gtag/js?id=G-VQQ0H44YW4"></script>
+
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+
+gtag('config', 'G-VQQ0H44YW4', {
+ anonymize_ip:true
+});
+</script>
+
 <meta charset="UTF-8">
 
 <meta name="viewport"
@@ -179,6 +193,25 @@ body{
    <button class="shareBtn" onclick="shareTT()">TikTok</button>
   </div>
  </div>
+<!-- STATISTIK -->
+<div id="statsBox"
+style="
+width:100%;
+max-width:500px;
+margin-top:12px;
+background:rgba(0,0,0,.18);
+padding:12px;
+border-radius:15px;
+font-size:3.5vw;
+text-align:left;
+">
+
+ <div>📊 Hari ini: <b id="statDay">0</b></div>
+ <div>📅 Mingguan: <b id="statWeek">0</b></div>
+ <div>🗓 Bulanan: <b id="statMonth">0</b></div>
+ <div>🔥 Total: <b id="statTotal">0</b></div>
+
+</div>
 
  <!-- HELP -->
  <div style="margin-top:15px;text-align:center;">
@@ -336,6 +369,63 @@ document.addEventListener("touchend",e=>{
 /* HELP */
 function openHelp(){
  window.location.href="readme.html";
+ /* ===== GLOBAL ANALYTICS EVENT ===== */
+trackGA();
+updateCounter();
+
+function trackGA(){
+ let now=new Date();
+
+ gtag('event','baca_app',{
+  app:'Hagah2026',
+  date:formatDate(now),
+  week:getWeekKey(now),
+  month:now.getFullYear()+"-"+String(now.getMonth()+1).padStart(2,'0')
+ });
+}
+
+/* ===== LIVE COUNTER UI ===== */
+
+function updateCounter(){
+
+ let now=new Date();
+ let dKey="day_"+formatDate(now);
+ let wKey="week_"+getWeekKey(now);
+ let mKey="month_"+now.getFullYear()+"-"+String(now.getMonth()+1).padStart(2,'0');
+
+ increment(dKey);
+ increment(wKey);
+ increment(mKey);
+ increment("total_all");
+
+ document.getElementById("statDay").innerHTML=
+ localStorage.getItem(dKey)||0;
+
+ document.getElementById("statWeek").innerHTML=
+ localStorage.getItem(wKey)||0;
+
+ document.getElementById("statMonth").innerHTML=
+ localStorage.getItem(mKey)||0;
+
+ document.getElementById("statTotal").innerHTML=
+ localStorage.getItem("total_all")||0;
+}
+
+function increment(key){
+ let val=parseInt(localStorage.getItem(key)||0);
+ val++;
+ localStorage.setItem(key,val);
+}
+
+/* WEEK FORMAT */
+function getWeekKey(date){
+ let d=new Date(date);
+ d.setHours(0,0,0);
+ d.setDate(d.getDate()+4-(d.getDay()||7));
+ let y=new Date(d.getFullYear(),0,1);
+ let w=Math.ceil((((d-y)/86400000)+1)/7);
+ return d.getFullYear()+"-W"+String(w).padStart(2,'0');
+}
 }
 </script>
 </body>
