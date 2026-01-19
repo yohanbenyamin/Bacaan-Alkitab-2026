@@ -298,15 +298,6 @@ function openBible(){
  "https://alkitab.mobi/tb/"+kitab+"/"+pasal
  );
 }
-
- let start=parseInt(range.split("-")[0]);
- let end=parseInt(range.split("-")[1]);
-
- for(let i=start;i<=end;i++){
-  window.open("https://alkitab.mobi/tb/"+kitab+"/"+i,"_blank");
- }
-}
-
 /* SHARE */
 function shareWA(){
  window.open("https://wa.me/?text="+encodeURIComponent(shareText));
