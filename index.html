@@ -292,7 +292,27 @@ function openBible(){
  // contoh: "Keluaran 11-13"
  let parts=bacaan.split(" ");
  let kitab=parts[0];
- let pasal=parts[1].split("-")[0]; // ambil pasal awal
+ let range=parts[1];
+
+ // kalau tidak pakai range
+ if(!range.includes("-")){
+  window.open(
+   "https://alkitab.mobi/tb/"+kitab+"/"+range
+  );
+  return;
+ }
+
+ // kalau pakai range (11-13)
+ let start=parseInt(range.split("-")[0]);
+ let end=parseInt(range.split("-")[1]);
+
+ for(let i=start;i<=end;i++){
+  window.open(
+   "https://alkitab.mobi/tb/"+kitab+"/"+i,
+   "_blank"
+  );
+ }
+}
 
  window.open(
  "https://alkitab.mobi/tb/"+kitab+"/"+pasal
