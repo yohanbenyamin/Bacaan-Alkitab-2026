@@ -289,14 +289,15 @@ function openBible(){
  let key=formatDate(currentDate);
  let bacaan=dataGlobal[key]||"";
 
+ // contoh: "Keluaran 11-13"
  let parts=bacaan.split(" ");
  let kitab=parts[0];
- let range=parts[1];
+ let pasal=parts[1].split("-")[0]; // ambil pasal awal
 
- if(!range.includes("-")){
-  window.open("https://alkitab.mobi/tb/"+kitab+"/"+range);
-  return;
- }
+ window.open(
+ "https://alkitab.mobi/tb/"+kitab+"/"+pasal
+ );
+}
 
  let start=parseInt(range.split("-")[0]);
  let end=parseInt(range.split("-")[1]);
